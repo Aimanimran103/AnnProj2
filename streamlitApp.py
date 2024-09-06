@@ -1,26 +1,33 @@
 import streamlit as st
-import tensorflow as tf
 import numpy as np
+from tensorflow.keras.models import load_model
 from PIL import Image
+import cv2
 
-st.title("Digit Recognition with ANN")
+# Load the saved model
+ann= load_model('ann_model.h5')
 
-# Load your trained model
-model = tf.keras.models.load_model('ann_model.h5')
+# Function to preprocess the image
+def preprocess_image(image):
+    image = image.convert('L')  # Convert to grayscale
+    image = image.resize((8, 8))  # Resize to 8x8 pixels as in the dataset
+    image = np.array(image) / 16.0  # Normalize (as the dataset uses 16 grayscale values)
+    image = image.flatten().reshape(1, -1)  # Flatten and reshape
+    return image
 
-# Upload an image
-uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+# Streamlit app interface
+st.title("Digit Recognition App")
 
+# Allow user to upload an image
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 if uploaded_file is not None:
+    # Display the uploaded image
     image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded Image.", use_column_width=True)
+    st.image(image, caption='Uploaded Image', use_column_width=True)
+    
+    # Preprocess and predict
+    processed_image = preprocess_image(image)
+    prediction = load_model.predict(processed_image)
+    predicted_digit = np.argmax(prediction)
 
-    # Preprocess the image before prediction
-    img_array = np.array(image.resize((28, 28)))  # Adjust size according to your model
-    img_array = img_array / 255.0  # Normalize
-    img_array = np.expand_dims(img_array, axis=0)  # Reshape for prediction
-
-    # Make prediction
-    prediction = model.predict(img_array)
-    st.write(f"Predicted digit: {np.argmax(prediction)}")
-
+    st.write(f'Predicted Digit: {predicted_digit}')
