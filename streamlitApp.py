@@ -29,5 +29,5 @@ if uploaded_file is not None:
     processed_image = preprocess_image(image)
     prediction = ann.predict(processed_image)
     predicted_digit = np.argmax(prediction)
-
+    st.write(f"Predicted Digit:{predicted_digit}")
     
