@@ -6,7 +6,7 @@ from PIL import Image
 st.title("Digit Recognition with ANN")
 
 # Load your trained model
-model = tf.keras.models.load_model('path_to_your_ann_model.h5')
+model = tf.keras.models.load_model('ann_model.h5')
 
 # Upload an image
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
