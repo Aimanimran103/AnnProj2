@@ -27,7 +27,7 @@ if uploaded_file is not None:
     
     # Preprocess and predict
     processed_image = preprocess_image(image)
-    prediction = load_model.predict(processed_image)
+    prediction = model.predict(processed_image)
     predicted_digit = np.argmax(prediction)
 
-    st.write(f'Predicted Digit: {predicted_digit}')
+    
